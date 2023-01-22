@@ -23,6 +23,8 @@ prev_data = None
 # Initialize file index
 file_index = 0
 
+black_count = 0
+
 while True:
     # Capture frame-by-frame
     ret, frame = cap.read()
@@ -31,7 +33,8 @@ while True:
     pixel = frame[0,0]
     # check if the pixel is close to black
     if (pixel[0] < 10) and (pixel[1] < 10) and (pixel[2] < 10):
-        print("top left corner is close to black")
+        print(f"top left corner is close to black {black_count}")
+        black_count += 1
 
         # Find QR codes in the frame
         qr_codes = pyzbar.decode(frame)
@@ -54,7 +57,8 @@ while True:
             # Draw rectangles around QR codes
             (x, y, w, h) = qr_code.rect
             cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 2)
-    
+    else:
+        black_count = 0
     # Display the resulting frame
     cv2.imshow('QR code reader', frame)
 
