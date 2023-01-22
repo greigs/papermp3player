@@ -35,7 +35,7 @@ namespace mp3
             const int numParts = 291;
             // ffmpeg -rtbufsize 1k -i pipe: -f wav pipe:1 | ffplay -nodisp -
             const string bashScript = "start-pipe.sh";
-            const string path = "/home/greig/papermp3/input_spt/";
+            const string path = "/home/greig/filewatcherplayer/data/tmp/";
 
             using (Process myProcess = new Process())
             {
