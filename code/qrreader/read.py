@@ -30,25 +30,30 @@ while True:
     # Find QR codes in the frame
     qr_codes = pyzbar.decode(frame)
 
-    # Process QR codes
-    for qr_code in qr_codes:
-        # Get QR code data
-        data = qr_code.data
+    # Get pixel value of the top left corner
+    pixel = frame[0,0]
+    # check if the pixel is close to black
+    if (pixel[0] < 10) and (pixel[1] < 10) and (pixel[2] < 10):
+        print("top left corner is close to black")
 
-        # Compare data to previous data
-        if data != prev_data:
-            # Save data to binary file with incremented file index
-            file_name = f'input_{file_index}.spt'
-            with open(os.path.join(qr_code_dir, file_name), 'wb') as f:
-                f.write(data)
-            prev_data = data
-            file_index += 1
-            print(f"QR code data saved to {file_name}")
+         # Process QR codes
+        for qr_code in qr_codes:
+            # Get QR code data
+            data = qr_code.data
 
+            # Compare data to previous data
+            if data != prev_data and len(data) > 10:
+                # Save data to binary file with incremented file index
+                file_name = f'input_{file_index}.spt'
+                with open(os.path.join(qr_code_dir, file_name), 'wb') as f:
+                    f.write(data)
+                prev_data = data
+                file_index += 1
+                print(f"QR code data saved to {file_name}")
 
-        # Draw rectangles around QR codes
-        (x, y, w, h) = qr_code.rect
-        cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 2)
+            # Draw rectangles around QR codes
+            (x, y, w, h) = qr_code.rect
+            cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 2)
 
     # Display the resulting frame
     cv2.imshow('QR code reader', frame)
