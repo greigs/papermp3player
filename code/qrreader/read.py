@@ -3,7 +3,7 @@ from pyzbar import pyzbar
 import os
 
 # specify the named directory
-qr_code_dir = '../data/tmp'
+qr_code_dir = '../../data/tmp'
 
 # check if the directory exists or create it
 if not os.path.exists(qr_code_dir):
