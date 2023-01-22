@@ -7,29 +7,6 @@ namespace mp3
 {
     public class Program
     {
-
-        // https://github.com/manuelbl/QrCodeGenerator
-        // Net.Codecrete.QrCodeGenerator
-        // Demo-Winforms 
-        // QrCodeControl.cs
-        // private QrCode CreateQrCode()
-        // {
-        //
-        //     const int maxBytes = 2953;
-        //     var bytes = File.ReadAllBytes("input.m4a");
-        //     var j = 0;
-        //     for (var i = 0; i < bytes.Length - maxBytes; i += maxBytes)
-        //     {
-        //         var data = (new ReadOnlySpan<byte>(bytes, i, maxBytes)).ToArray();
-        //         var output = QrCode.EncodeBinary(data, QrCode.Ecc.Low);
-        //         output.SaveAsPng(j + ".png", 1, 2);
-        //         j++;
-        //     }
-        //
-        //     return QrCode.EncodeSegments(new List<QrSegment>(){ QrSegment.MakeBytes(Encoding.UTF8.GetBytes(_textData.ToCharArray()))}, QrCode.Ecc.Low);
-        //
-        // }
-
         public static void Main()
         {
             const int numParts = 291;
