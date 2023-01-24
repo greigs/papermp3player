@@ -2,7 +2,7 @@
 
 # Set the starting and ending numbers
 start=0
-end=30
+end=301
 
 # Iterate through the numbered files
 for ((i=start; i<=end; i++))
