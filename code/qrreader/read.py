@@ -1,6 +1,11 @@
 import cv2
 from pyzbar import pyzbar
+from zbar import Config, Image, Symbol
+import zbar
 import os
+import io
+import os    
+from chardet import detect
 
 # specify the named directory
 qr_code_dir = '../../data/tmp'
@@ -16,7 +21,11 @@ else:
 
 # Initialize webcam
 cap = cv2.VideoCapture(0)
-
+# cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'))
+width = 1280
+height = 720
+cap.set(cv2.CAP_PROP_FRAME_WIDTH, width)
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
 # Initialize previous data
 prev_data = None
 
@@ -24,39 +33,52 @@ prev_data = None
 file_index = 0
 
 black_count = 0
+scanner = zbar.ImageScanner()
+scanner.parse_config('enable')
+scanner.set_config(Symbol.QRCODE, Config.ENABLE, 1)
+scanner.set_config(Symbol.QRCODE, Config.BINARY, 1)
+
+
 
 while True:
     # Capture frame-by-frame
     ret, frame = cap.read()
-
+    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    height, width = frame.shape[:2]
     # Get pixel value of the top left corner
     pixel = frame[0,0]
     # check if the pixel is close to black
-    if (pixel[0] < 10) and (pixel[1] < 10) and (pixel[2] < 10):
-        print(f"top left corner is close to black {black_count}")
+    if (True):
+        # print(f"top left corner is close to black {black_count}")
         black_count += 1
 
-        # Find QR codes in the frame
-        qr_codes = pyzbar.decode(frame)
+        raw = frame.tobytes()
+        image = zbar.Image(width, height, 'Y800', raw)
 
+        scanner.scan(image)
+        
          # Process QR codes
-        for qr_code in qr_codes:
-            # Get QR code data
-            data = qr_code.data
+        for symbol in image:
 
+            print('decoded', symbol.type)
+            
+            # Get QR code data
+            
+            data = bytes()
+            data = symbol.data 
             # Compare data to previous data
-            if data != prev_data and len(data) > 10:
+            # if symbol.data != prev_data and len(symbol.data) > 10:
                 # Save data to binary file with incremented file index
-                file_name = f'input_{file_index}.spt'
-                with open(os.path.join(qr_code_dir, file_name), 'wb') as f:
-                    f.write(data)
-                prev_data = data
-                file_index += 1
-                print(f"QR code data saved to {file_name}")
+            file_name = f'input_{file_index}.spt'
+            with open(os.path.join(qr_code_dir, file_name), 'wb') as f:
+                f.write(data)
+            # prev_data = symbol.data
+            file_index += 1
+            print(f"QR code data saved to {file_name}")
 
             # Draw rectangles around QR codes
-            (x, y, w, h) = qr_code.rect
-            cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 2)
+            # (x, y, w, h) = qr_code.rect
+            # cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 2)
     else:
         black_count = 0
     # Display the resulting frame
