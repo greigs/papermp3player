@@ -11,8 +11,8 @@ namespace mp3
         {
             const int numParts = 302;
             // ffmpeg -rtbufsize 1k -i pipe: -f wav pipe:1 | ffplay -nodisp -
-            const string bashScript = "start-pipe.sh";
-            const string path = "/home/greig/papermp3player/data/tmp/";
+            const string bashScript = "/home/pi/papermp3player/code/filewatcherplayer/start-pipe.sh";
+            const string path = "/home/pi/QR_scanner_Raspberry_Pi/Bullseye_32/build/";
 
             using (Process myProcess = new Process())
             {
@@ -34,7 +34,7 @@ namespace mp3
                     //     fileSystemChange = fsw.WaitForChanged(WatcherChangeTypes.Created, 60000);
                     // } while (fileSystemChange.Name != $"input_{i}.spt");
                     Console.WriteLine(i);
-                    var inputFromQrCode = File.OpenRead($"{path}input_{i}.spt");
+                    var inputFromQrCode = File.OpenRead($"{path}output_{i}.bin");
                     var bufferSize = (int)inputFromQrCode.Length;
                     var newBuffer = new byte[bufferSize];
                     inputFromQrCode.Read(newBuffer, 0, bufferSize);
